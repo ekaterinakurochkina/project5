@@ -1,4 +1,6 @@
 import pytest
+
+
 from src.generators import filter_by_currency, transaction_descriptions, card_number_generator
 
 transactions = [
@@ -97,7 +99,7 @@ def test_filter_by_currency(transactions, currency):
 
 def test_transaction_descriptions(transactions):
     #тестирование функции описания
-    assert transaction_descriptions(transactions[0]) ==  "Перевод организации"
+    assert transaction_descriptions(transactions[0]["description"]) ==  "Перевод организации"
 
 
 def test_card_number_generator(start, end):
