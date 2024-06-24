@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "pythonproject5"
+version = "0.1.0"
+description = ""
+authors = ["Katerina Kurochkina <katifedr@mail.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+
+
+[tool.poetry.group.dev.dependencies]
+flake8 = "^7.1.0"
+pytest = "^8.2.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
