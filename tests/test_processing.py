@@ -1,6 +1,6 @@
 import pytest
 
-from src.processing import filter_by_state
+from src.processing import filter_by_
 
 # тестирование при помощи параметризации
 
