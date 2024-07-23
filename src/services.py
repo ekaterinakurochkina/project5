@@ -1,7 +1,7 @@
-import json
 import datetime
+import json
+from typing import Any, Dict, List
 
-from typing import Dict, List, Any
 # from src.date import month
 from src.read_excel import read_excel
 
@@ -38,7 +38,7 @@ from src.read_excel import read_excel
 #     ]
 # month ="2018-01"
 # limit = 100
-def investment_bank(month: str, transactions: List[Dict[str,Any]], limit:int):
+def investment_bank(month: str, transactions: List[Dict[str, Any]], limit: int):
     """Функция, возвращающая сумму, которую можно было бы отложить в Инвесткопилку
     в заданном месяце года при заданном округлении"""
     month_choice = month(0)
@@ -57,12 +57,15 @@ def investment_bank(month: str, transactions: List[Dict[str,Any]], limit:int):
         ceshback = amount * -1 // limit * -1 * limit
         investment = ceshback - amount
         operation["Кэшбэк"] = investment  # заполняем в словаре значение кешбэка
-    # суммируем кэшбэк за указанный месяц
+        # суммируем кэшбэк за указанный месяц
         total_investment += investment
-        total_investment = round(total_investment,2)
+        total_investment = round(total_investment, 2)
 
-    print(f"Итого за {month_choice} в инвесткопилку была бы отложена сумма {total_investment} руб.")
+    print(
+        f"Итого за {month_choice} в инвесткопилку была бы отложена сумма {total_investment} руб."
+    )
     return total_investment
+
 
 # if __name__ == "__main__":
 #     investment_bank()

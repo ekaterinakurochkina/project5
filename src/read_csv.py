@@ -28,9 +28,15 @@ def read_csv(path_to_file: Path) -> List:
                         "Категория": row[header.index("Категория")],
                         "МСС": row[header.index("MCC")],
                         "Описание": row[header.index("Описание")],
-                        "Бонусы (включая кэшбэк)": row[header.index("Бонусы (включая кэшбэк)")],
-                        "Округление на инвесткопилку": row[header.index("Округление на инвесткопилку")],
-                        "Сумма операции с округлением": row[header.index("Сумма операции с округлением")],
+                        "Бонусы (включая кэшбэк)": row[
+                            header.index("Бонусы (включая кэшбэк)")
+                        ],
+                        "Округление на инвесткопилку": row[
+                            header.index("Округление на инвесткопилку")
+                        ],
+                        "Сумма операции с округлением": row[
+                            header.index("Сумма операции с округлением")
+                        ],
                     }
                     # print(f" csv _{dict_row}")
                     transactions.append(dict_row)
@@ -46,7 +52,5 @@ def read_csv(path_to_file: Path) -> List:
 
 
 if __name__ == "__main__":
-    path_to_file = (Path(ROOT_PATH, "../data/Отчет по операциям.csv"))
+    path_to_file = Path(ROOT_PATH, "../data/Отчет по операциям.csv")
     print(read_csv(Path(ROOT_PATH, "../data/Отчет по операциям.csv")))
-
-

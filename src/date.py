@@ -1,11 +1,15 @@
 import datetime
 
 
-def month(month_choice: int)-> str:
+def month(month_choice: int) -> str:
     """Функция преобразования выбранного месяца"""
-#Запрашиваем месяц
+    # Запрашиваем месяц
     while True:
-        month = int(input(f"Для расчета возьмём 2021 год. Введите порядковый номер месяца от 1 до 12: "))
+        month = int(
+            input(
+                f"Для расчета возьмём 2021 год. Введите порядковый номер месяца от 1 до 12: "
+            )
+        )
         if 0 < month < 10:
             month_choice = "2021-0" + str(month)
             break
@@ -18,22 +22,22 @@ def month(month_choice: int)-> str:
 
     return month_choice
 
+
 def limit(user_limit: int) -> int:
     """Функция выбора лимита округления"""
     while True:
-        limit = int(input(
-            "Выберите комфортную Вам сумму округления остатка для инвесткопилки.Введите число 10, 50 или 100: "))
+        limit = int(
+            input(
+                "Выберите комфортную Вам сумму округления остатка для инвесткопилки.Введите число 10, 50 или 100: "
+            )
+        )
         if limit == 10 or limit == 50 or limit == 100:
             print(f"Выбрано округление до {limit} рублей")
             break
         else:
             print("Ошибка ввода")
-#             continue
+    #             continue
     return limit
-
-
-
-
 
 
 if __name__ == "__main__":

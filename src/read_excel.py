@@ -1,12 +1,15 @@
 import sys
 from pathlib import Path
+
 import numpy
 import numpy as np
 import pandas as pd
+
 sys.path.append(str(Path(__file__).resolve().parent.parent))
+import datetime
+
 from src.config import ROOT_PATH
 from src.date import month
-import datetime
 
 
 def read_excel(path_to_file: Path) -> list:
@@ -14,7 +17,9 @@ def read_excel(path_to_file: Path) -> list:
 
     with open(path_to_file, "r", encoding="utf-8") as excel_file:
         try:
-            df = pd.read_excel(path_to_file, dtype="object") # очищаем числовые значения от ненужной информации
+            df = pd.read_excel(
+                path_to_file, dtype="object"
+            )  # очищаем числовые значения от ненужной информации
             # pd.read_excel("file", dtype="object")
             transactions = []
             for i in range(0, len(df)):
@@ -31,8 +36,12 @@ def read_excel(path_to_file: Path) -> list:
                     "МСС": df.loc[i, "MCC"],
                     "Описание": df.loc[i, "Описание"],
                     "Бонусы (включая кешбэк)": df.loc[i, "Бонусы (включая кэшбэк)"],
-                    "Округление на Инвесткопилку": df.loc[i, "Округление на инвесткопилку"],
-                    "Сумма операции с округлением": df.loc[i, "Сумма операции с округлением"],
+                    "Округление на Инвесткопилку": df.loc[
+                        i, "Округление на инвесткопилку"
+                    ],
+                    "Сумма операции с округлением": df.loc[
+                        i, "Сумма операции с округлением"
+                    ],
                 }
                 transactions.append(row_dict)
 
@@ -44,5 +53,5 @@ def read_excel(path_to_file: Path) -> list:
 
 
 if __name__ == "__main__":
-    path_to_file = (Path(ROOT_PATH, "../data/operations.xlsx"))
+    path_to_file = Path(ROOT_PATH, "../data/operations.xlsx")
     print(read_excel(Path(ROOT_PATH, "../data/operations.xlsx")))
