@@ -1,14 +1,5 @@
 import datetime
 
-def date_format(date: str)-> str:
-    """Функция преобразования даты операции"""
-    operation_data = datetime.datetime.strptime(date, "%d.%m.%Y %H:%M:%S")
-    format_date = operation_data.strftime("%Y-%m-%d %H:%M:%S")
-    # print(format_date)
-    # print(type(format_date))
-    return format_date
-
-# существующий формат даты в excel:   'Дата операции': '01.01.2018 20:27:51'
 
 def month(month_choice: int)-> str:
     """Функция преобразования выбранного месяца"""

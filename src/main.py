@@ -1,7 +1,9 @@
+import json
 import os
 from src.read_excel import read_excel
 from src.services import investment_bank
 import sys
+import logging
 from pathlib import Path
 import pandas as pd
 sys.path.append(str(Path(__file__).resolve().parent.parent))
@@ -9,6 +11,13 @@ from src.config import ROOT_PATH
 from src.date import month, limit
 
 path_to_file = (Path(ROOT_PATH, "../data/operations.xlsx"))
+
+logger = logging.getLogger("main")
+logger.setLevel(logging.INFO)
+file_handler = logging.FileHandler("../logs/main.log", "w")
+file_formatted = logging.Formatter("%(asctime)s-%(name)s-%(levelname)s: %(message)s")
+file_handler.setFormatter(file_formatted)
+logger.addHandler(file_handler)
 def main():
     """Функция упраления проектом"""
     print("""Добро пожаловать в раздел 'Сервис'
@@ -20,21 +29,6 @@ def main():
         if es_no == "да":
             # Читаем данные из excel-файла
             transactions = read_excel(path_to_file)
-            # Запрашиваем месяц
-            # while True:
-            #     month_choice = int(input(f"Введите порядковый номер месяца, например, 4 (тогда будет выбран апрель): "))
-            #     if 0 < month_choice < 10:
-            #         month = "2021.0" + str(month_choice)
-            #         print(f"Выбран {month}")
-            #         break
-            #     elif 9 < month_choice < 13:
-            #         month = "2021." + str(month_choice)
-            #         print(f"Выбран {month}")
-            #         break
-            #     else:
-            #         print("Ошибка. Введите число в диапазоне от 1 до 12.")
-            #         continue
-            # Запрашиваем лимит округления
             while True:
                 limit = int(input(
                     "Выберите комфортную Вам сумму округления остатка для инвесткопилки.Введите число 10, 50 или 100: "))
@@ -45,17 +39,19 @@ def main():
                     print("Ошибка ввода")
                     continue
             total_investment = investment_bank(month, transactions, limit)
-            return total_investment
+            logger.info(f"Производим расчет сумм для инвесткопилки")
+            # создаем json-строку
+            data = {"total_investment" : total_investment}
+            json_data =json.dumps((data))
+            print(f"Json-ответ: {json_data}")
+            return json_data
         elif es_no == "нет":
             print("Хорошо. До встречи!")
             break
         else:
+            logger.error("Ошибка")
             print("Ошибка ввода")
             continue
-
-
-
-
 
 
 if __name__ == "__main__":
