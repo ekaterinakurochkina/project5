@@ -6,7 +6,7 @@ import pandas as pd
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 from src.config import ROOT_PATH
 from src.date import month
-
+import datetime
 
 
 def read_excel(path_to_file: Path) -> list:
@@ -35,14 +35,23 @@ def read_excel(path_to_file: Path) -> list:
                     "Сумма операции с округлением": df.loc[i, "Сумма операции с округлением"],
                 }
                 transactions.append(row_dict)
-                month = "2021.03"
-                operations = sorted(transactions, key=lambda transactions: month in transactions["Дата операции"])
-                # print(operations)
-            return transactions
+
         except Exception as e:
             print(e)
             print("Ошибка чтения excel")
             return []
+    # month_choice = month(0)
+    # operations = []
+    # for transaction in transactions:
+    #     date_excel = transaction["Дата операции"]
+    #     operation_data = datetime.datetime.strptime(date_excel, "%d.%m.%Y %H:%M:%S")
+    #     format_date = operation_data.strftime("%Y-%m-%d %H:%M:%S")
+    #     transaction["Дата операции"] = format_date
+    #     if month_choice in transaction["Дата операции"]:
+    #         operations.append(transaction)
+    # print(transactions)
+    return transactions
+
 
 if __name__ == "__main__":
     path_to_file = (Path(ROOT_PATH, "../data/operations.xlsx"))

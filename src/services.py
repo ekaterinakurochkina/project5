@@ -1,4 +1,5 @@
 import json
+import datetime
 from typing import Dict, List, Any
 # from src.date import limit, month
 from src.read_excel import read_excel
@@ -6,7 +7,15 @@ from src.read_excel import read_excel
 def investment_bank(month: str, transactions: List[Dict[str,Any]], limit:int):
     """Функция, возвращающая сумму, которую можно было бы отложить в Инвесткопилку
     в заданном месяце года при заданном округлении"""
-    operations = sorted(transactions, key=lambda transactions: month in transactions["Дата операции"])
+    month_choice = month(0)
+    operations = []
+    for transaction in transactions:
+        date_excel = transaction["Дата операции"]
+        operation_data = datetime.datetime.strptime(date_excel, "%d.%m.%Y %H:%M:%S")
+        format_date = operation_data.strftime("%Y-%m-%d %H:%M:%S")
+        transaction["Дата операции"] = format_date
+        if month_choice in transaction["Дата операции"]:
+            operations.append(transaction)
     # print(operations)
     total_investment = 0
     for operation in operations:
@@ -17,6 +26,6 @@ def investment_bank(month: str, transactions: List[Dict[str,Any]], limit:int):
     # суммируем кэшбэк за указанный месяц
         total_investment += investment
         total_investment = round(total_investment,2)
-    print(f"Итого за {month} в инвесткопилку была бы отложена сумма {total_investment} руб.")
+    print(f"Итого за {month_choice} в инвесткопилку была бы отложена сумма {total_investment} руб.")
     return total_investment
 

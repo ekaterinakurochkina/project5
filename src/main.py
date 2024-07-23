@@ -6,7 +6,7 @@ from pathlib import Path
 import pandas as pd
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 from src.config import ROOT_PATH
-# from src.date import month, limit
+from src.date import month, limit
 
 path_to_file = (Path(ROOT_PATH, "../data/operations.xlsx"))
 def main():
@@ -21,19 +21,19 @@ def main():
             # Читаем данные из excel-файла
             transactions = read_excel(path_to_file)
             # Запрашиваем месяц
-            while True:
-                month_choice = int(input(f"Введите порядковый номер месяца, например, 4 (тогда будет выбран апрель): "))
-                if 0 < month_choice < 10:
-                    month = "2021.0" + str(month_choice)
-                    print(f"Выбран {month}")
-                    break
-                elif 9 < month_choice < 13:
-                    month = "2021." + str(month_choice)
-                    print(f"Выбран {month}")
-                    break
-                else:
-                    print("Ошибка. Введите число в диапазоне от 1 до 12.")
-                    continue
+            # while True:
+            #     month_choice = int(input(f"Введите порядковый номер месяца, например, 4 (тогда будет выбран апрель): "))
+            #     if 0 < month_choice < 10:
+            #         month = "2021.0" + str(month_choice)
+            #         print(f"Выбран {month}")
+            #         break
+            #     elif 9 < month_choice < 13:
+            #         month = "2021." + str(month_choice)
+            #         print(f"Выбран {month}")
+            #         break
+            #     else:
+            #         print("Ошибка. Введите число в диапазоне от 1 до 12.")
+            #         continue
             # Запрашиваем лимит округления
             while True:
                 limit = int(input(
