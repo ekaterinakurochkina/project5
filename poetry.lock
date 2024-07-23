@@ -120,4 +120,3 @@ dev = ["argcomplete", "attrs (>=19.2)", "hypothesis (>=3.56)", "mock", "pygments
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "1ec480725f78bf183a769bc3f1699a0cb0b77bef195b88158c14ff114ae27588"
