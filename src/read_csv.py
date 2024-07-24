@@ -1,9 +1,10 @@
-import csv
 import sys
 from pathlib import Path
-from typing import List
 
 sys.path.append(str(Path(__file__).resolve().parent.parent))
+import csv
+from typing import List
+
 from src.config import ROOT_PATH
 
 
