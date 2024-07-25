@@ -54,5 +54,5 @@ def limit():
     return 100
 
 
-def test_investment_bank():
+def test_investment_bank(month, information, limit):
     assert investment_bank(month, information, limit) == 3100
