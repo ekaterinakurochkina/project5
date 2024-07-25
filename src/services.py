@@ -23,8 +23,9 @@ def investment_bank(month: str, transactions: List[Dict[str, Any]], limit: int):
     total_investment = 0
     for operation in operations:
         amount = operation["Сумма операции"]
-        ceshback = amount * -1 // limit * -1 * limit
-        investment = ceshback - amount
+
+        ceshback = abs(amount) * -1 // limit * -1 * limit
+        investment = ceshback - abs(amount)
         operation["Кэшбэк"] = investment  # заполняем в словаре значение кешбэка
         # суммируем кэшбэк за указанный месяц
         total_investment += investment

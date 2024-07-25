@@ -1,9 +1,5 @@
-import datetime
 import pytest
 from src.services import investment_bank
-from src.utils import read_excel
-
-# from src.date import month
 
 
 @pytest.fixture()
@@ -46,7 +42,7 @@ def information():
 
 @pytest.fixture()
 def month():
-    return "2021-01"
+    return "2021-02"
 
 
 @pytest.fixture()
@@ -55,4 +51,8 @@ def limit():
 
 
 def test_investment_bank(month, information, limit):
-    assert investment_bank(month, information, limit) == 3100
+    assert investment_bank(month, information, limit) == 84
+
+
+# def test_investment_bank(month, information, limit):
+#     assert investment_bank(month, [], limit) == 0
