@@ -1,7 +1,7 @@
 import datetime
 import pytest
 from src.services import investment_bank
-from src.read_excel import read_excel
+from src.utils import read_excel
 
 # from src.date import month
 

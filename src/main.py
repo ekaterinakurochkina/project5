@@ -9,7 +9,7 @@ import logging
 import sys
 from pathlib import Path
 
-from src.read_excel import read_excel
+from src.utils import read_excel
 from src.services import investment_bank
 
 path_to_file = Path(ROOT_PATH, "../data/operations.xlsx")
