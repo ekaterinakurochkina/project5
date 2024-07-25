@@ -1,17 +1,16 @@
-import json
-import logging
-import os
 import sys
 from pathlib import Path
 
-import pandas as pd
-
-from src.read_excel import read_excel
-from src.services import investment_bank
+from src.config import ROOT_PATH
 
 sys.path.append(str(Path(__file__).resolve().parent.parent))
-from src.config import ROOT_PATH
-from src.date import limit, month
+import json
+import logging
+import sys
+from pathlib import Path
+
+from src.utils import read_excel
+from src.services import investment_bank
 
 path_to_file = Path(ROOT_PATH, "../data/operations.xlsx")
 
@@ -36,10 +35,12 @@ def main():
         if es_no == "да":
             # Читаем данные из excel-файла
             transactions = read_excel(path_to_file)
+            # Запрашиваем лимит округления
             while True:
                 limit = int(
                     input(
-                        "Выберите комфортную Вам сумму округления остатка для инвесткопилки.Введите число 10, 50 или 100: "
+                        "Выберите комфортную Вам сумму округления остатка для инвесткопилки."
+                        "Введите число 10, 50 или 100: "
                     )
                 )
                 if limit == 10 or limit == 50 or limit == 100:
@@ -47,6 +48,22 @@ def main():
                     break
                 else:
                     print("Ошибка ввода")
+                    continue
+            # Запрашиваем месяц
+            while True:
+                month_choice = int(
+                    input(
+                        f"Для расчета возьмём 2021 год. Введите порядковый номер месяца от 1 до 12: "
+                    )
+                )
+                if 0 < month_choice < 10:
+                    month = "2021-0" + str(month_choice)
+                    break
+                elif 9 < month_choice < 13:
+                    month = "2021-" + str(month_choice)
+                    break
+                else:
+                    print("Ошибка. Введите число в диапазоне от 1 до 12.")
                     continue
             total_investment = investment_bank(month, transactions, limit)
             logger.info(f"Производим расчет сумм для инвесткопилки")

@@ -1,20 +1,14 @@
 import sys
 from pathlib import Path
 
-import numpy
-import numpy as np
 import pandas as pd
 
 sys.path.append(str(Path(__file__).resolve().parent.parent))
-import datetime
-
 from src.config import ROOT_PATH
-from src.date import month
 
 
 def read_excel(path_to_file: Path) -> list:
     """Функция чтения транзакций из excel-файла"""
-
     with open(path_to_file, "r", encoding="utf-8") as excel_file:
         try:
             df = pd.read_excel(
