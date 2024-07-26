@@ -11,6 +11,7 @@ from pathlib import Path
 
 from src.utils import read_excel
 from src.services import investment_bank
+from src.utils import greeting
 
 path_to_file = Path(ROOT_PATH, "../data/operations.xlsx")
 
@@ -24,6 +25,9 @@ logger.addHandler(file_handler)
 
 def main():
     """Функция упраления проектом"""
+    # приветствие
+
+
     print(
         """Добро пожаловать в раздел 'Сервис'
     Предлагаем ознакомиться с возможностями Инвест-копилки.

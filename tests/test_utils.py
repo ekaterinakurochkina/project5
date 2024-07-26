@@ -1,9 +1,11 @@
+from datetime import datetime
+from src.utils import greeting
 import pytest
 from src.utils import read_excel
 import sys
 from pathlib import Path
 from src.config import ROOT_PATH
-
+from unittest.mock import patch
 
 @pytest.fixture()
 def path_to_file():
@@ -45,3 +47,21 @@ def test_read_excel(path_to_file):
             "Сумма операции с округлением": 64,
         },
     ]
+
+
+@patch("src.utils.datetime")
+@pytest.mark.parametrize(
+    "current_hour, expected_greeting",
+    [
+        (8, "Доброе утро!"),
+        (14, "Добрый день!"),
+        (21, "Добрый вечер!"),
+        (3, "Доброй ночи!"),
+    ],
+)
+def test_greeting(mock_datetime, current_hour, expected_greeting):
+    mock_now = datetime(2021, 7, 25, current_hour, 0, 0)
+    mock_datetime.datetime.now.return_value = mock_now
+    result = greeting()
+    assert result == expected_greeting
+

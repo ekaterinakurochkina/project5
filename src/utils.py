@@ -1,10 +1,18 @@
 import sys
 from pathlib import Path
-
+import datetime
 import pandas as pd
+import logging
 
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 from src.config import ROOT_PATH
+
+logger = logging.getLogger("main")
+logger.setLevel(logging.INFO)
+file_handler = logging.FileHandler("../logs/main.log", "w")
+file_formatted = logging.Formatter("%(asctime)s-%(name)s-%(levelname)s: %(message)s")
+file_handler.setFormatter(file_formatted)
+logger.addHandler(file_handler)
 
 
 def read_excel(path_to_file: Path) -> list:
@@ -46,6 +54,21 @@ def read_excel(path_to_file: Path) -> list:
     return transactions
 
 
+def greeting():
+    "Функция для определения времени суток и вывода приветствия"
+    current_time = datetime.datetime.now()
+    logger.info("Приветствие")
+    if 6 <= int(current_time.hour) < 12:
+        return "Доброе утро!"
+    elif 12 <= int(current_time.hour) < 18:
+        return "Добрый день!"
+    elif 18 <= int(current_time.hour) < 23:
+        return "Добрый вечер!"
+    else:
+        return "Доброй ночи!"
+
+
 if __name__ == "__main__":
     path_to_file = Path(ROOT_PATH, "../data/operations.xlsx")
     print(read_excel(Path(ROOT_PATH, "../data/operations.xlsx")))
+    print(greeting())
