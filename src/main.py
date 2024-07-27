@@ -25,7 +25,7 @@ logger.addHandler(file_handler)
 
 def main():
     """Функция упраления проектом"""
-    # приветствие
+    print(f"ИмяРек, {greeting()}")
 
 
     print(
