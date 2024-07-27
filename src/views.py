@@ -63,10 +63,41 @@ def currency_rate(currency):
     rate = result["info"]["rate"]
 
     print(f"Дата: {date}; Валюта: {currency}; Курс: {round(rate,2)}")
-    return round(rate,2)
+    return round(rate, 2)
+
+
 # Дата: 2024-07-27; Валюта: USD; Курс: 85.97
 # Дата: 2024-07-27; Валюта: EUR; Курс: 93.47
+
+
+# фондовый рынок:
+def price_stocks(symbol):
+    apikey = os.getenv("APIKEY")
+    # symbol = "IBM"
+    date = "2024-07-01"
+    url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&outputsize=full&apikey={apikey}"
+    # Отправка запроса
+    response = requests.get(url)
+    data = response.json()
+    # url = 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=IBM&interval=60min&apikey=apikey&month=2024-07&outputsize=1&adjusted=false'
+    for day, prices in data["Time Series (Daily)"].items():
+        if day == date:
+            price = float(prices["1. open"])
+            # print(f"Цена акции IBM на {date}:")
+            # print(f"Открытие: {open_price}")
+            break
+    else:
+        print(f"Не удалось найти данные для акции на {date}")
+    result = f"Дата: {date}, стоимость акции {symbol} составляет {price}"
+    print(result)
+    return result
+
 
 if __name__ == "__main__":
     currency_rate("USD")
     currency_rate("EUR")
+    price_stocks("GOOGL")
+    price_stocks("TSLA")
+    price_stocks("AMZN")
+    price_stocks("AAPL")
+    price_stocks("MSFT")
