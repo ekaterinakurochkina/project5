@@ -31,6 +31,16 @@ logger.addHandler(file_handler)
 # *7197 Номер карты
 # -160.89 Сумма платежа, отрицательное число
 # 31.12.2021
+# def filtered_operations():
+# operations = []
+#     for transaction in transactions:
+#         date_excel = transaction["Дата операции"]
+#         operation_data = datetime.datetime.strptime(date_excel, "%d.%m.%Y %H:%M:%S")
+#         format_date = operation_data.strftime("%Y-%m-%d %H:%M:%S")
+#         transaction["Дата операции"] = format_date
+#         if month in transaction["Дата операции"]:
+#             operations.append(transaction)
+
 
 
 def load_user_settings(file_path="src.user_settings.json"):  # Пока не применяю
@@ -55,13 +65,11 @@ def currency_rate(currency):
     """функция, которая принимает транзакцию и возвращает сумму транзакции"""
     # currency = "USD"
     amount = 1
-    url = f"https://api.apilayer.com/exchangerates_data/convert?to={"RUB"}&from={currency}&amount={amount}&date=2021-07-01"
+    url = f"https://api.apilayer.com/exchangerates_data/convert?to={"RUB"}&from={currency}&amount={amount}&date=2021-07-31"
     headers = {"apikey": api_key}
     response = requests.request("GET", url, headers=headers)
-    result = (
-        response.json()
-    )  # {'success': True, 'query': {'from': 'USD', 'to': 'RUB', 'amount': 1}, 'info': {'timestamp': 1722058575, 'rate': 85.972867}, 'date': '2024-07-27', 'result': 85.972867}
-    date = result["date"]
+    result = response.json()
+    date = "2021-07-31"
     from_currency = result["query"]["from"]
     to_currency = result["query"]["to"]
     rate = result["info"]["rate"]
@@ -78,7 +86,7 @@ def currency_rate(currency):
 def price_stocks(symbol):
     apikey = os.getenv("APIKEY")
     # symbol = "IBM"
-    date = "2021-07-01"
+    date = "2021-07-31"
     url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&outputsize=full&apikey={apikey}"
     # Отправка запроса
     response = requests.get(url)
@@ -96,10 +104,10 @@ def price_stocks(symbol):
 
 
 if __name__ == "__main__":
-    # currency_rate("USD")
-    # currency_rate("EUR")
-    price_stocks("GOOGL")
-    price_stocks("TSLA")
-    price_stocks("AMZN")
-    price_stocks("AAPL")
-    price_stocks("MSFT")
+    currency_rate("USD")
+    currency_rate("EUR")
+    # price_stocks("GOOGL")
+    # price_stocks("TSLA")
+    # price_stocks("AMZN")
+    # price_stocks("AAPL")
+    # price_stocks("MSFT")

@@ -26,7 +26,7 @@ logger.addHandler(file_handler)
 def main():
     """Функция упраления проектом"""
     print(f"ИмяРек, {greeting()}")
-    print("Сегодня 01 июля 2021 года.")
+    print("Сегодня 31 июля 2021 года.")
     print("""Добро пожаловать в раздел 'Главная страница'! """)
     currency_rate("USD")
     currency_rate("EUR")
