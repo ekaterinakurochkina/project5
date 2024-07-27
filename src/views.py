@@ -8,6 +8,7 @@ import logging
 from datetime import datetime
 import src.utils
 import pandas as pd
+
 # import yfinance as yf
 from src.utils import read_excel
 
@@ -28,14 +29,14 @@ file_handler.setFormatter(file_formatted)
 logger.addHandler(file_handler)
 
 
-
-def load_user_settings(file_path="src.user_settings.json"): # Пока не применяю
+def load_user_settings(file_path="src.user_settings.json"):  # Пока не применяю
     """Загрузка пользовательских настроек"""
     with open(file_path, "r", encoding="utf-8") as file:
         settings = json.load(file)
         logging.error("Файл не найден")
     # print(settings)   # выведет: {'user_currencies': ['EUR', 'USD'], 'user_stocks': ['GOOGL', 'TSLA', 'AMZN', 'AAPL', 'MSFT']}
     return settings
+
 
 # Мне не нравится этот вариант получения 5 последних транзакций! Нужен топ-5 по сумме
 # def get_top_transactions(
@@ -46,35 +47,26 @@ def load_user_settings(file_path="src.user_settings.json"): # Пока не пр
 #         return top_transactions.to_dict(orient="records")
 
 
-def transaction_amount(currency):
+def currency_rate(currency):
     """функция, которая принимает транзакцию и возвращает сумму транзакции"""
     # currency = "USD"
     amount = 1
     url = f"https://api.apilayer.com/exchangerates_data/convert?to={"RUB"}&from={currency}&amount={amount}"
     headers = {"apikey": api_key}
     response = requests.request("GET", url, headers=headers)
-    result = response.json() # {'success': True, 'query': {'from': 'USD', 'to': 'RUB', 'amount': 1}, 'info': {'timestamp': 1722058575, 'rate': 85.972867}, 'date': '2024-07-27', 'result': 85.972867}
-    date = result['date']
-    from_currency = result['query']['from']
-    to_currency = result['query']['to']
-    rate = result['info']['rate']
+    result = (
+        response.json()
+    )  # {'success': True, 'query': {'from': 'USD', 'to': 'RUB', 'amount': 1}, 'info': {'timestamp': 1722058575, 'rate': 85.972867}, 'date': '2024-07-27', 'result': 85.972867}
+    date = result["date"]
+    from_currency = result["query"]["from"]
+    to_currency = result["query"]["to"]
+    rate = result["info"]["rate"]
 
-    print(f"Дата: {date}; Валюта: {currency}; Курс: {rate}")
-    return result
+    print(f"Дата: {date}; Валюта: {currency}; Курс: {round(rate,2)}")
+    return round(rate,2)
+# Дата: 2024-07-27; Валюта: USD; Курс: 85.97
+# Дата: 2024-07-27; Валюта: EUR; Курс: 93.47
 
-# # Проверка работы кода
-# transactions = src.utils.get_transactions(Path(ROOT_PATH, "../data/operations.json"))
-#
-# transaction = {
-#     "id": 441945886,
-#     "state": "EXECUTED",
-#     "date": "2019-08-26T10:50:58.294041",
-#     "operationAmount": {"amount": "31957.58", "currency": {"name": "руб.", "code": "RUB"}},
-#     "description": "Перевод организации",
-#     "from": "Maestro 1596837868705199",
-#     "to": "Счет 64686473678894779589",
-# }
-# print(transaction_amount(transaction))
 if __name__ == "__main__":
-    transaction_amount("USD")
-    transaction_amount("EUR")
+    currency_rate("USD")
+    currency_rate("EUR")

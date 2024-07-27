@@ -68,9 +68,6 @@ def greeting():
         return "Доброй ночи!"
 
 
-
-
-
 # if __name__ == "__main__":
 #     path_to_file = Path(ROOT_PATH, "../data/operations.xlsx")
 #     print(read_excel(Path(ROOT_PATH, "../data/operations.xlsx")))
