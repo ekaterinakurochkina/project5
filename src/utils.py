@@ -7,9 +7,9 @@ import logging
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 from src.config import ROOT_PATH
 
-logger = logging.getLogger("main")
+logger = logging.getLogger("utils")
 logger.setLevel(logging.INFO)
-file_handler = logging.FileHandler("../logs/main.log", "w")
+file_handler = logging.FileHandler("../logs/utils.log", "w")
 file_formatted = logging.Formatter("%(asctime)s-%(name)s-%(levelname)s: %(message)s")
 file_handler.setFormatter(file_formatted)
 logger.addHandler(file_handler)
@@ -59,13 +59,13 @@ def greeting():
     current_time = datetime.datetime.now()
     logger.info("Приветствие")
     if 6 <= int(current_time.hour) < 12:
-        return "Доброе утро!"
+        return "доброе утро!"
     elif 12 <= int(current_time.hour) < 18:
-        return "Добрый день!"
+        return "добрый день!"
     elif 18 <= int(current_time.hour) < 23:
-        return "Добрый вечер!"
+        return "добрый вечер!"
     else:
-        return "Доброй ночи!"
+        return "доброй ночи!"
 
 
 # if __name__ == "__main__":

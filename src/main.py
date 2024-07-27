@@ -8,7 +8,7 @@ import json
 import logging
 import sys
 from pathlib import Path
-
+from src.views import price_stocks, currency_rate
 from src.utils import read_excel
 from src.services import investment_bank
 from src.utils import greeting
@@ -26,7 +26,17 @@ logger.addHandler(file_handler)
 def main():
     """Функция упраления проектом"""
     print(f"ИмяРек, {greeting()}")
+    print("Сегодня 01 июля 2021 года.")
+    print("""Добро пожаловать в раздел 'Главная страница'! """)
+    currency_rate("USD")
+    currency_rate("EUR")
+    price_stocks("GOOGL")
+    price_stocks("TSLA")
+    price_stocks("AMZN")
+    price_stocks("AAPL")
+    price_stocks("MSFT")
 
+    # следующий раздел
     print(
         """Добро пожаловать в раздел 'Сервис'
     Предлагаем ознакомиться с возможностями Инвест-копилки.

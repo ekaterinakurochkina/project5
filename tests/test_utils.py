@@ -7,6 +7,7 @@ from pathlib import Path
 from src.config import ROOT_PATH
 from unittest.mock import patch
 
+
 @pytest.fixture()
 def path_to_file():
     return "/Users/ekaterinakurockina/PycharmProjects/pythonProject5/data/OperationsTest.xlsx"
@@ -53,10 +54,10 @@ def test_read_excel(path_to_file):
 @pytest.mark.parametrize(
     "current_hour, expected_greeting",
     [
-        (8, "Доброе утро!"),
-        (14, "Добрый день!"),
-        (21, "Добрый вечер!"),
-        (3, "Доброй ночи!"),
+        (8, "доброе утро!"),
+        (14, "добрый день!"),
+        (21, "добрый вечер!"),
+        (3, "доброй ночи!"),
     ],
 )
 def test_greeting(mock_datetime, current_hour, expected_greeting):
@@ -64,4 +65,3 @@ def test_greeting(mock_datetime, current_hour, expected_greeting):
     mock_datetime.datetime.now.return_value = mock_now
     result = greeting()
     assert result == expected_greeting
-

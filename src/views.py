@@ -21,12 +21,16 @@ api_key = os.getenv("API_KEY")
 
 ROOT_PATH = Path(__file__).resolve().parent.parent
 
-logger = logging.getLogger("main")
+logger = logging.getLogger("views")
 logger.setLevel(logging.INFO)
-file_handler = logging.FileHandler("../logs/main.log", "w")
+file_handler = logging.FileHandler("../logs/views.log", "w")
 file_formatted = logging.Formatter("%(asctime)s-%(name)s-%(levelname)s: %(message)s")
 file_handler.setFormatter(file_formatted)
 logger.addHandler(file_handler)
+
+# *7197 Номер карты
+# -160.89 Сумма платежа, отрицательное число
+# 31.12.2021
 
 
 def load_user_settings(file_path="src.user_settings.json"):  # Пока не применяю
@@ -51,7 +55,7 @@ def currency_rate(currency):
     """функция, которая принимает транзакцию и возвращает сумму транзакции"""
     # currency = "USD"
     amount = 1
-    url = f"https://api.apilayer.com/exchangerates_data/convert?to={"RUB"}&from={currency}&amount={amount}"
+    url = f"https://api.apilayer.com/exchangerates_data/convert?to={"RUB"}&from={currency}&amount={amount}&date=2021-07-01"
     headers = {"apikey": api_key}
     response = requests.request("GET", url, headers=headers)
     result = (
@@ -61,7 +65,7 @@ def currency_rate(currency):
     from_currency = result["query"]["from"]
     to_currency = result["query"]["to"]
     rate = result["info"]["rate"]
-
+    logging.info("Передаю данные о стоимости акций")
     print(f"Дата: {date}; Валюта: {currency}; Курс: {round(rate,2)}")
     return round(rate, 2)
 
@@ -74,7 +78,7 @@ def currency_rate(currency):
 def price_stocks(symbol):
     apikey = os.getenv("APIKEY")
     # symbol = "IBM"
-    date = "2024-07-01"
+    date = "2021-07-01"
     url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&outputsize=full&apikey={apikey}"
     # Отправка запроса
     response = requests.get(url)
@@ -83,8 +87,6 @@ def price_stocks(symbol):
     for day, prices in data["Time Series (Daily)"].items():
         if day == date:
             price = float(prices["1. open"])
-            # print(f"Цена акции IBM на {date}:")
-            # print(f"Открытие: {open_price}")
             break
     else:
         print(f"Не удалось найти данные для акции на {date}")
@@ -94,8 +96,8 @@ def price_stocks(symbol):
 
 
 if __name__ == "__main__":
-    currency_rate("USD")
-    currency_rate("EUR")
+    # currency_rate("USD")
+    # currency_rate("EUR")
     price_stocks("GOOGL")
     price_stocks("TSLA")
     price_stocks("AMZN")
