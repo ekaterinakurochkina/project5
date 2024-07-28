@@ -8,9 +8,11 @@ import json
 import logging
 import sys
 from pathlib import Path
-
-from src.utils import read_excel
+from src.views import price_stocks, currency_rate, filtered_operations
+from src.utils import read_excel, data_to_df
 from src.services import investment_bank
+from src.utils import greeting
+from src.reports import spending_by_category
 
 path_to_file = Path(ROOT_PATH, "../data/operations.xlsx")
 
@@ -24,6 +26,21 @@ logger.addHandler(file_handler)
 
 def main():
     """Функция упраления проектом"""
+    logger.info("Программа запущена")
+    print(f"ИмяРек, {greeting()}")
+    print("Сегодня 31 июля 2021 года.")
+    print("""Добро пожаловать в раздел "Главная страница"! """)
+    print("Предлагаем ознакомиться с курсом валют и акций.")
+    currency_rate("USD")
+    currency_rate("EUR")
+    price_stocks("GOOGL")
+    price_stocks("TSLA")
+    price_stocks("AMZN")
+    price_stocks("AAPL")
+    price_stocks("MSFT")
+
+    filtered_operations()
+    # следующий раздел
     print(
         """Добро пожаловать в раздел 'Сервис'
     Предлагаем ознакомиться с возможностями Инвест-копилки.
@@ -35,6 +52,7 @@ def main():
         if es_no == "да":
             # Читаем данные из excel-файла
             transactions = read_excel(path_to_file)
+            logger.info("excel-файл прочитан")
             # Запрашиваем лимит округления
             while True:
                 limit = int(
@@ -71,7 +89,7 @@ def main():
             data = {"total_investment": total_investment}
             json_data = json.dumps((data))
             print(f"Json-ответ: {json_data}")
-            return json_data
+            # return json_data
         elif es_no == "нет":
             print("Хорошо. До встречи!")
             break
@@ -79,6 +97,12 @@ def main():
             logger.error("Ошибка")
             print("Ошибка ввода")
             continue
+
+    print("Добро пожаловать в раздел Отчёты!")
+    transactions = data_to_df(path_to_file)
+    spending_by_category(transactions, "Супермаркеты")
+    logger.info(f"Работа программы завершена")
+    return print("Программа завершает свою работу, до новых встреч!")
 
 
 if __name__ == "__main__":
