@@ -1,15 +1,12 @@
 import os
+from math import nan
 from pathlib import Path
-from typing import Any, Dict, List
 import json
 import requests
 from dotenv import load_dotenv
 import logging
 from datetime import datetime
-import src.utils
-import pandas as pd
 
-# import yfinance as yf
 from src.utils import read_excel
 
 # from src.сonfig import ROOT_PATH
@@ -28,10 +25,12 @@ file_formatted = logging.Formatter("%(asctime)s-%(name)s-%(levelname)s: %(messag
 file_handler.setFormatter(file_formatted)
 logger.addHandler(file_handler)
 
-
+# В таком виде представлены данные:
 # *7197 Номер карты
 # -160.89 Сумма платежа, отрицательное число
 # 31.12.2021
+
+
 def filtered_operations():
     """Функция страницы Главная, выводит номера карт, топ-5 трат и кэшбэк 1 руб. на каждые 100 руб."""
     # path_to_file = Path(ROOT_PATH, "../data/operations.xlsx")
@@ -40,22 +39,23 @@ def filtered_operations():
     operations = []
     card_numbers = []
     counter_amount = 0
+
     # отсортировываем транзакции за месяц 07.2021
     for transaction in transactions:
-        date_excel = transaction["Дата операции"]
-        operation_data = datetime.strptime(date_excel, "%d.%m.%Y %H:%M:%S")
-        format_date = operation_data.strftime("%Y.%m.%d")
-        transaction["Дата платежа"] = format_date
-        if "2021.07" in transaction["Дата платежа"]:
+        # date_excel = transaction["Дата_операции"]
+        # operation_data = datetime.strptime(date_excel, "%d.%m.%Y %H:%M:%S")
+        # format_date = operation_data.strftime("%Y.%m.%d")
+        # transaction["Дата_платежа"] = format_date
+        if "07.2021" in str(transaction["Дата_платежа"]):
             operations.append(transaction)
             counter_amount += abs(transaction["Сумма операции"])
             # записываем номера карт
             if (
                 transaction["Номер карты"] not in card_numbers
-                and transaction["Номер карты"]
+                and transaction["Номер карты"] != nan
             ):
                 card_numbers.append(transaction["Номер карты"])
-
+    # print(operations)
     # Отсортируем словарь по величине суммы транзакции в порядке убывания
     sorted_operations = sorted(
         operations, key=lambda x: abs(x["Сумма операции"]), reverse=True
@@ -67,7 +67,8 @@ def filtered_operations():
     count = 0
     for top in top_5_transactions:
         count += 1
-        result.append(f"{count}. {top["Описание"]} : {top["Сумма операции"]}")
+        result.append(f"{count}. {top["Категория"]} : {top["Сумма операции"]}")
+    logger.info("Производится расчет топ-5 транзакций по сумме операций")
     print("Топ-5 транзакций:")
     for transaction in result:
         print(transaction)
@@ -75,8 +76,11 @@ def filtered_operations():
     for number in card_numbers:
         print(number)
     # рассчитываем кешбэк
+    logger.info("Рассчитываем кешбэк")
     cashback = round(counter_amount / 100, 2)
-    print(f"Сумма расходов за июль 2021 года составляет: {counter_amount} руб.")
+    print(
+        f"Сумма расходов за июль 2021 года составляет: {round(counter_amount,2)} руб."
+    )
     print(f"Сумма кешбэка за июль 2021 года составляет: {cashback} руб.")
     # print(operations)
     return operations
@@ -91,17 +95,8 @@ def load_user_settings(file_path="src.user_settings.json"):  # Пока не п�
     return settings
 
 
-# Мне не нравится этот вариант получения 5 последних транзакций! Нужен топ-5 по сумме
-# def get_top_transactions(
-#         date_transactions["Дата операции"] = pd.to_datetime(date_transactions["Дата операции"],
-#         format="%Y-%m-%d %H:%M:%S").dt.strftime("%Y-%m-%d %H:%M:%S")
-#         top_transactions = date_transactions.nlargest(top_n, "Сумма операции: ")
-#         logging.info("Получение 5 последних транзакций")
-#         return top_transactions.to_dict(orient="records")
-
-
 def currency_rate(currency):
-    """функция, которая принимает транзакцию и возвращает сумму транзакции"""
+    """функция, которая принимает код валюты и возвращает ее курс на дату 31.07.2021"""
     # currency = "USD"
     amount = 1
     url = f"https://api.apilayer.com/exchangerates_data/convert?to={"RUB"}&from={currency}&amount={amount}&date=2021-07-31"
@@ -112,42 +107,39 @@ def currency_rate(currency):
     from_currency = result["query"]["from"]
     to_currency = result["query"]["to"]
     rate = result["info"]["rate"]
-    logging.info("Передаю данные о стоимости акций")
+    logging.info("Передаю данные о курсе валют")
     print(f"Дата: {date}; Валюта: {currency}; Курс: {round(rate,2)}")
-    return round(rate, 2)
-
-
-# Дата: 2024-07-27; Валюта: USD; Курс: 85.97
-# Дата: 2024-07-27; Валюта: EUR; Курс: 93.47
+    return rate
 
 
 # фондовый рынок:
 def price_stocks(symbol):
+    """Функция, принимающая код акции и возвращающая ее стоимость на дату 01.07.2024"""
     apikey = os.getenv("APIKEY")
-    # symbol = "IBM"
-    date = "2021-07-31"
+    date = "2024-07-01"
     url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&outputsize=full&apikey={apikey}"
     # Отправка запроса
     response = requests.get(url)
     data = response.json()
-    # url = 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=IBM&interval=60min&apikey=apikey&month=2024-07&outputsize=1&adjusted=false'
+    url = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=IBM&interval=60min&apikey=apikey&month=2024-07&outputsize=1&adjusted=false"
     for day, prices in data["Time Series (Daily)"].items():
         if day == date:
             price = float(prices["1. open"])
             break
     else:
         print(f"Не удалось найти данные для акции на {date}")
+    logger.info("Передаю данные о стоимости акций")
     result = f"Дата: {date}, стоимость акции {symbol} составляет {price}"
     print(result)
-    return result
+    return price
 
 
-if __name__ == "__main__":
-    # currency_rate("USD")
-    # currency_rate("EUR")
-    # price_stocks("GOOGL")
-    # price_stocks("TSLA")
-    # price_stocks("AMZN")
-    # price_stocks("AAPL")
-    # price_stocks("MSFT")
-    filtered_operations()
+# if __name__ == "__main__":
+# currency_rate("USD")
+# currency_rate("EUR")
+# price_stocks("GOOGL")
+# price_stocks("TSLA")
+# price_stocks("AMZN")
+# price_stocks("AAPL")
+# price_stocks("MSFT")
+# filtered_operations()

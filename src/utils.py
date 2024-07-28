@@ -26,8 +26,8 @@ def read_excel(path_to_file: Path) -> list:
             transactions = []
             for i in range(0, len(df)):
                 row_dict = {
-                    "Дата операции": df.loc[i, "Дата операции"],
-                    "Дата платежа": df.loc[i, "Дата платежа"],
+                    "Дата_операции": df.loc[i, "Дата операции"],
+                    "Дата_платежа": df.loc[i, "Дата платежа"],
                     "Номер карты": df.loc[i, "Номер карты"],
                     "Статус": df.loc[i, "Статус"],
                     "Сумма операции": df.loc[i, "Сумма операции"],
@@ -46,11 +46,12 @@ def read_excel(path_to_file: Path) -> list:
                     ],
                 }
                 transactions.append(row_dict)
-
         except Exception as e:
             print(e)
             print("Ошибка чтения excel")
+            logger.error("Ошибка чтения excel")
             return []
+    logger.info("excel-файл прочитан")
     return transactions
 
 
@@ -68,7 +69,31 @@ def greeting():
         return "доброй ночи!"
 
 
-# if __name__ == "__main__":
-#     path_to_file = Path(ROOT_PATH, "../data/operations.xlsx")
-#     print(read_excel(Path(ROOT_PATH, "../data/operations.xlsx")))
-#     print(greeting())
+import sys
+from pathlib import Path
+
+sys.path.append(str(Path(__file__).resolve().parent.parent))
+import csv
+from typing import List
+
+from src.config import ROOT_PATH
+
+
+# def data_to_df(path_to_file):
+#     df = pd.read_csv(path_to_file, delimiter=",")
+#     logger.info("Файл формата csv преобразован в DataFrame")
+#     print(df.head())
+#     return df
+
+
+def data_to_df(path_to_file):
+    df = pd.read_excel(path_to_file)
+    logger.info("Файл формата excel преобразован в DataFrame")
+    # print(df.head())
+    return df
+
+
+if __name__ == "__main__":
+    path_to_file = Path(ROOT_PATH, "../data/operations.xlsx")
+    # path_to_file = Path(ROOT_PATH, "../data/Отчет по операциям.csv")
+    data_to_df(path_to_file)
